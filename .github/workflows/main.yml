@@ -1,0 +1,33 @@
+name: Daily Streak Automation
+
+on:
+  schedule:
+    # This runs at 00:00 UTC every day. 
+    # You can change this to any time (Minute Hour Day Month Weekday)
+    - cron: '30 4,14 * * *'
+  workflow_dispatch: # Allows you to trigger it manually for testing
+
+jobs:
+  commit-job:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Essential for the bot to push commits
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "vedantghode32@gmail.com"
+          git config --global user.name "vedantghode32"
+
+      - name: Run Randomizer Script
+        run: python randomizer.py
